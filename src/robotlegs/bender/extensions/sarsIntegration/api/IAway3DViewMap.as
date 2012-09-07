@@ -6,9 +6,6 @@
 // ------------------------------------------------------------------------------
 package robotlegs.bender.extensions.sarsIntegration.api
 {
-	/**
-	 * @author jamieowen
-	 */
 	public interface IAway3DViewMap
 	{
 		function addAway3DView(view : *) : void;

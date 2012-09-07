@@ -1,18 +1,12 @@
 package robotlegs.bender.extensions.sarsIntegration.impl
 {
-	import robotlegs.bender.extensions.sarsIntegration.api.IStarlingViewMap;
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
+	import robotlegs.bender.extensions.sarsIntegration.api.IStarlingViewMap;
 	
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.events.Event;
 	
-	/**
-	 * 
-	 * StarlingViewMap Impl
-	 * 
-	 * @author jamieowen
-	 */
 	public class StarlingViewMap implements IStarlingViewMap
 	{
 		/*============================================================================*/

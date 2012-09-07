@@ -46,8 +46,6 @@ package robotlegs.bender.bundles
 				SignalCommandMapExtension,
 				SARSStageSyncExtension);
 			
-			context.logLevel = LogLevel.DEBUG;
-			
 			context.configure(ContextViewListenerConfig);
 		}
 	}

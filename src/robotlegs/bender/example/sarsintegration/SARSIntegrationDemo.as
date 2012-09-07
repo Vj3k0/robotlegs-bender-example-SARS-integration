@@ -22,7 +22,6 @@ package robotlegs.bender.example.sarsintegration
 	import robotlegs.bender.framework.impl.Context;
 	
 	import starling.core.Starling;
-	import starling.events.Event;
 	
 	public class SARSIntegrationDemo extends Sprite
 	{

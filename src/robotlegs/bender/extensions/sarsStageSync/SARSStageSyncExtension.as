@@ -20,7 +20,6 @@ package robotlegs.bender.extensions.sarsStageSync
 	import robotlegs.bender.framework.impl.UID;
 	
 	import starling.core.Starling;
-	import starling.display.DisplayObjectContainer;
 	import starling.events.Event;
 
 	/**

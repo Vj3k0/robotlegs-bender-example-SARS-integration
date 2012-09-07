@@ -12,15 +12,9 @@ package robotlegs.bender.extensions.sarsIntegration.impl
 	import away3d.containers.View3D;
 	import away3d.events.Scene3DEvent;
 	
-	import robotlegs.bender.extensions.sarsIntegration.api.IAway3DViewMap;
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
+	import robotlegs.bender.extensions.sarsIntegration.api.IAway3DViewMap;
 
-	/**
-	 * 
-	 * Away3DViewMap Impl
-	 * 
-	 * @author jamieowen
-	 */
 	public class Away3DViewMap implements IAway3DViewMap	
 	{
 		/*============================================================================*/
