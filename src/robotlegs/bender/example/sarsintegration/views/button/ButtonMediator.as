@@ -1,6 +1,7 @@
 package robotlegs.bender.example.sarsintegration.views.button
 {
 	import robotlegs.bender.bundles.mvcs.Mediator;
+	import robotlegs.bender.example.sarsintegration.signals.ButtonActivated;
 	import robotlegs.bender.framework.api.ILogger;
 	
 	public class ButtonMediator extends Mediator
@@ -14,7 +15,11 @@ package robotlegs.bender.example.sarsintegration.views.button
 		public var view:IButton;
 		
 		[Inject]
-		public var _logger:ILogger;
+		public var logger:ILogger;
+		
+		[Inject]
+		public var buttonActivated:ButtonActivated;
+		
 		
 		override public function initialize():void
 		{
@@ -25,7 +30,8 @@ package robotlegs.bender.example.sarsintegration.views.button
 		
 		private function onTriggered(message:String):void
 		{
-			_logger.debug(message);
+			logger.debug(message);
+			buttonActivated.dispatch(view);
 		}
 		
 		

@@ -7,6 +7,12 @@ package robotlegs.bender.example.sarsintegration.config
 	
 	import org.swiftsuspenders.Injector;
 	
+	import robotlegs.bender.example.sarsintegration.commands.ChangeButtonColorCommand;
+	import robotlegs.bender.example.sarsintegration.commands.SetupCommand;
+	import robotlegs.bender.example.sarsintegration.signals.ButtonActivated;
+	import robotlegs.bender.example.sarsintegration.signals.PerformSetup;
+	import robotlegs.bender.example.sarsintegration.views.IMainApplication;
+	import robotlegs.bender.example.sarsintegration.views.MainApplicationMediator;
 	import robotlegs.bender.example.sarsintegration.views.button.Button2D;
 	import robotlegs.bender.example.sarsintegration.views.button.Button3D;
 	import robotlegs.bender.example.sarsintegration.views.button.ButtonMediator;
@@ -55,21 +61,13 @@ package robotlegs.bender.example.sarsintegration.config
 			
 //			Map commands
 			
-			
+			commandMap.map(ButtonActivated).toCommand(ChangeButtonColorCommand);
+			commandMap.map(PerformSetup, true).toCommand(SetupCommand);
 			
 //			Map mediators
 			
-			mediatorMap
-			.map(IButton)
-				.toMediator(ButtonMediator);
-			
-			context.lifecycle.afterInitializing(initComplete);
-		}
-		
-		private function initComplete():void
-		{
-			starlingView.addChild(new Button2D());
-			view3D.scene.addChild(new Button3D());
+			mediatorMap.map(IButton).toMediator(ButtonMediator);
+			mediatorMap.map(IMainApplication).toMediator(MainApplicationMediator);
 		}
 	}
 }
