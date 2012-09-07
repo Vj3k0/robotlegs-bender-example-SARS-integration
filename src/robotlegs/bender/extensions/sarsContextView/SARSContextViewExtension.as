@@ -5,23 +5,19 @@
 //  in accordance with the terms of the license agreement accompanying it. 
 //------------------------------------------------------------------------------
 
-package robotlegs.bender.extensions.sarsIntegration
+package robotlegs.bender.extensions.sarsContextView
 {
 	import away3d.containers.View3D;
 	
-	import org.hamcrest.object.instanceOf;
+	import flash.display.DisplayObjectContainer;
 	
-	import robotlegs.bender.extensions.sarsIntegration.api.IAway3DViewMap;
-	import robotlegs.bender.extensions.sarsIntegration.api.IStarlingViewMap;
-	import robotlegs.bender.extensions.sarsIntegration.impl.Away3DViewMap;
-	import robotlegs.bender.extensions.sarsIntegration.impl.StarlingViewMap;
+	import org.hamcrest.object.instanceOf;
+	import org.swiftsuspenders.Injector;
+	
 	import robotlegs.bender.framework.api.IContext;
 	import robotlegs.bender.framework.api.IExtension;
 	import robotlegs.bender.framework.api.ILogger;
 	import robotlegs.bender.framework.impl.UID;
-	
-	import starling.core.Starling;
-	import starling.display.DisplayObjectContainer;
 
 	/**
 	 * <p>This Extension waits for a DisplayObjectContainer to be added as a configuration
@@ -29,16 +25,16 @@ package robotlegs.bender.extensions.sarsIntegration
 	 *
 	 * <p>It should be installed before context initialization.</p>
 	 */
-	public class SARSIntegrationExtension implements IExtension
+	public class SARSContextViewExtension implements IExtension
 	{
 
 		/*============================================================================*/
 		/* Private Properties                                                         */
 		/*============================================================================*/
 
-		private const _uid:String = UID.create(SARSIntegrationExtension);
+		private const _uid:String = UID.create(SARSContextViewExtension);
 
-		private var _context:IContext;
+		private var _injector:Injector;
 
 		private var _logger:ILogger;
 
@@ -50,11 +46,9 @@ package robotlegs.bender.extensions.sarsIntegration
 
 		public function extend(context:IContext):void
 		{
-			_context = context;
+			_injector = context.injector;
 			_logger = context.getLogger(this);
-			
-			_context.addConfigHandler(instanceOf(Starling), handleStarling);
-			_context.addConfigHandler(instanceOf(View3D), handleView3D);
+			context.addConfigHandler(instanceOf(DisplayObjectContainer), handleContextView);
 		}
 
 		public function toString():String
@@ -66,23 +60,21 @@ package robotlegs.bender.extensions.sarsIntegration
 		/* Private Functions                                                          */
 		/*============================================================================*/
 
-		private function handleStarling(s:Starling):void
+		private function handleContextView(view:DisplayObjectContainer):void
 		{
-			_logger.debug("Mapping provided Starling instance and its stage  as Starling contextView...");
-			_context.injector.map(Starling).toValue(s);
-			_context.injector.map(DisplayObjectContainer).toValue(s.stage);
+			// ignore Away3D view
+			if (view is View3D)
+				return;
 			
-			_context.injector.map(IStarlingViewMap).toSingleton(StarlingViewMap);
-			_context.injector.getInstance(IStarlingViewMap);
-		}
-		
-		private function handleView3D(view3D:View3D):void
-		{
-			_logger.debug("Mapping provided View3D as Away3D contextView...");
-			_context.injector.map(View3D).toValue(view3D);
-			
-			_context.injector.map(IAway3DViewMap).toSingleton(Away3DViewMap);
-			_context.injector.getInstance(IAway3DViewMap);
+			if (_injector.satisfiesDirectly(DisplayObjectContainer))
+			{
+				_logger.warn('A contextView has already been mapped, ignoring {0}', [view]);
+			}
+			else
+			{
+				_logger.debug("Mapping {0} as contextView", [view]);
+				_injector.map(DisplayObjectContainer).toValue(view);
+			}
 		}
 	}
 }

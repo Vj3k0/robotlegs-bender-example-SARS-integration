@@ -5,14 +5,14 @@
 // in accordance with the terms of the license agreement accompanying it.
 // ------------------------------------------------------------------------------
 
-package robotlegs.bender.extensions.sarsViewMap.impl
+package robotlegs.bender.extensions.sarsIntegration.impl
 {
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.Scene3D;
 	import away3d.containers.View3D;
 	import away3d.events.Scene3DEvent;
 	
-	import robotlegs.bender.extensions.sarsViewMap.api.IAway3DViewMap;
+	import robotlegs.bender.extensions.sarsIntegration.api.IAway3DViewMap;
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 
 	/**

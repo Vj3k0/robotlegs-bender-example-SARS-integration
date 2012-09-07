@@ -1,6 +1,6 @@
-package robotlegs.bender.extensions.sarsViewMap.impl
+package robotlegs.bender.extensions.sarsIntegration.impl
 {
-	import robotlegs.bender.extensions.sarsViewMap.api.IStarlingViewMap;
+	import robotlegs.bender.extensions.sarsIntegration.api.IStarlingViewMap;
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	
 	import starling.core.Starling;

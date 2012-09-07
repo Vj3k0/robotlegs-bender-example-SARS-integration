@@ -4,7 +4,7 @@
 // NOTICE: You are permitted to use, modify, and distribute this file
 // in accordance with the terms of the license agreement accompanying it.
 // ------------------------------------------------------------------------------
-package robotlegs.bender.extensions.sarsViewMap.api
+package robotlegs.bender.extensions.sarsIntegration.api
 {
 	/**
 	 * @author jamieowen

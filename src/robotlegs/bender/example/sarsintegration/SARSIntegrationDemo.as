@@ -15,12 +15,9 @@ package robotlegs.bender.example.sarsintegration
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	
-	import robotlegs.bender.bundles.mvcs.MVCSBundle;
+	import robotlegs.bender.bundles.SARSBundle;
 	import robotlegs.bender.example.sarsintegration.config.Config;
 	import robotlegs.bender.example.sarsintegration.views.MainApplication;
-	import robotlegs.bender.extensions.sarsViewMap.SARSViewMapExtension;
-	import robotlegs.bender.extensions.sarsIntegration.SARSIntegrationExtension;
-	import robotlegs.bender.extensions.signalCommandMap.SignalCommandMapExtension;
 	import robotlegs.bender.framework.api.IContext;
 	import robotlegs.bender.framework.impl.Context;
 	
@@ -78,11 +75,6 @@ package robotlegs.bender.example.sarsintegration
 			
 			_stage3DProxy = _stage3DManager.getFreeStage3DProxy();
 			_stage3DProxy.addEventListener(Stage3DEvent.CONTEXT3D_CREATED, onCreate);
-			
-			/*initAway3D();
-			initStarling();
-			
-			_starling.addEventListener(starling.events.Event.ROOT_CREATED, setupContext);*/
 		}
 		
 		private function onCreate(event:Stage3DEvent):void
@@ -90,19 +82,21 @@ package robotlegs.bender.example.sarsintegration
 			initAway3D();
 			initStarling();
 			
-			_starling.addEventListener(starling.events.Event.ROOT_CREATED, setupContext);
+//			_starling.addEventListener(starling.events.Event.ROOT_CREATED, setupContext);
+			
+			_context = new Context();
+			
+			_context.extend(SARSBundle).configure(_view, _starling, Config, this);
+			
+			stage.addEventListener( flash.events.Event.RESIZE, onResize, false, 0, true );
+			stage.addEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame, false, 0, true );
 		}
 		
 		private function setupContext(event:starling.events.Event):void
 		{
 			_context = new Context();
 			
-//			First map Starling and Away instances and then initiate MVCSBundle with signal extension.
-//			Passing MVCSBundle to context should be done last since it will finish up Config initialization.
-			
-			_context.extend(SARSIntegrationExtension).configure(_starling, _view);
-			_context.extend(SignalCommandMapExtension);
-			_context.extend(MVCSBundle, SARSViewMapExtension).configure(Config, this);
+			_context.extend(SARSBundle).configure(_view, _starling, Config, this);
 			
 			stage.addEventListener( flash.events.Event.RESIZE, onResize, false, 0, true );
 			stage.addEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame, false, 0, true );

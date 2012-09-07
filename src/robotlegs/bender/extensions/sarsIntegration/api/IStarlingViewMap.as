@@ -5,7 +5,7 @@
 //  in accordance with the terms of the license agreement accompanying it. 
 //------------------------------------------------------------------------------
 
-package robotlegs.bender.extensions.sarsViewMap.api
+package robotlegs.bender.extensions.sarsIntegration.api
 {
 	import starling.display.DisplayObject;
 
