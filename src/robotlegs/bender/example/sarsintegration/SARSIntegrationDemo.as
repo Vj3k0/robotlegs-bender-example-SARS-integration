@@ -18,12 +18,14 @@ package robotlegs.bender.example.sarsintegration
 	import robotlegs.bender.bundles.mvcs.MVCSBundle;
 	import robotlegs.bender.example.sarsintegration.config.Config;
 	import robotlegs.bender.example.sarsintegration.views.MainApplication;
+	import robotlegs.bender.extensions.sarsViewMap.SARSViewMapExtension;
 	import robotlegs.bender.extensions.sarsIntegration.SARSIntegrationExtension;
 	import robotlegs.bender.extensions.signalCommandMap.SignalCommandMapExtension;
 	import robotlegs.bender.framework.api.IContext;
 	import robotlegs.bender.framework.impl.Context;
 	
 	import starling.core.Starling;
+	import starling.events.Event;
 	
 	public class SARSIntegrationDemo extends Sprite
 	{
@@ -60,14 +62,14 @@ package robotlegs.bender.example.sarsintegration
 		public function SARSIntegrationDemo()
 		{
 			super();
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		//---------------------------------------------------------------
 		// Private methods
 		//---------------------------------------------------------------
 		
-		private function onAddedToStage(event:Event):void 
+		private function onAddedToStage(event:flash.events.Event):void 
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
@@ -77,8 +79,10 @@ package robotlegs.bender.example.sarsintegration
 			_stage3DProxy = _stage3DManager.getFreeStage3DProxy();
 			_stage3DProxy.addEventListener(Stage3DEvent.CONTEXT3D_CREATED, onCreate);
 			
-			stage.addEventListener( Event.RESIZE, onResize, false, 0, true );
-			stage.addEventListener( Event.ENTER_FRAME, onEnterFrame, false, 0, true );
+			/*initAway3D();
+			initStarling();
+			
+			_starling.addEventListener(starling.events.Event.ROOT_CREATED, setupContext);*/
 		}
 		
 		private function onCreate(event:Stage3DEvent):void
@@ -86,14 +90,22 @@ package robotlegs.bender.example.sarsintegration
 			initAway3D();
 			initStarling();
 			
+			_starling.addEventListener(starling.events.Event.ROOT_CREATED, setupContext);
+		}
+		
+		private function setupContext(event:starling.events.Event):void
+		{
 			_context = new Context();
 			
 //			First map Starling and Away instances and then initiate MVCSBundle with signal extension.
 //			Passing MVCSBundle to context should be done last since it will finish up Config initialization.
 			
-			_context.extend(SARSIntegrationExtension).configure(_starling.stage, _view);
+			_context.extend(SARSIntegrationExtension).configure(_starling, _view);
 			_context.extend(SignalCommandMapExtension);
-			_context.extend(MVCSBundle).configure(Config, this);
+			_context.extend(MVCSBundle, SARSViewMapExtension).configure(Config, this);
+			
+			stage.addEventListener( flash.events.Event.RESIZE, onResize, false, 0, true );
+			stage.addEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame, false, 0, true );
 		}
 		
 		private function initAway3D():void
@@ -119,6 +131,7 @@ package robotlegs.bender.example.sarsintegration
 			
 //			Show Away3D stats
 			_stats = new AwayStats(_view,true);
+			_stats.mouseEnabled = false;
 			_stats.x = 5;
 			_stats.y = 5;
 			this.addChild(_stats);
@@ -131,21 +144,25 @@ package robotlegs.bender.example.sarsintegration
 		private function initStarling():void
 		{
 			_starling = new Starling(MainApplication, stage, _stage3DProxy.viewPort, _stage3DProxy.stage3D);
+			
+			_starling.start();
 		}
 		
-		private function onResize( event:Event = null ):void
+		private function onResize( event:flash.events.Event = null ):void
 		{
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
 		}
 		
-		private function onEnterFrame( event:Event ):void
+		private function onEnterFrame( event:flash.events.Event ):void
 		{
 			_stage3DProxy.clear();
 			
 			_view.render();
 			
 			_starling.nextFrame();
+			
+			_stage3DProxy.present();
 		}
 	}
 }

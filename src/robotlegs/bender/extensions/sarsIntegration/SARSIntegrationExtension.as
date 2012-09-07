@@ -16,6 +16,7 @@ package robotlegs.bender.extensions.sarsIntegration
 	import robotlegs.bender.framework.api.ILogger;
 	import robotlegs.bender.framework.impl.UID;
 	
+	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
 
 	/**
@@ -48,7 +49,7 @@ package robotlegs.bender.extensions.sarsIntegration
 			_context = context;
 			_logger = context.getLogger(this);
 			
-			_context.addConfigHandler(instanceOf(DisplayObjectContainer), handleContextView);
+			_context.addConfigHandler(instanceOf(Starling), handleStarling);
 			_context.addConfigHandler(instanceOf(View3D), handleView3D);
 		}
 
@@ -61,10 +62,11 @@ package robotlegs.bender.extensions.sarsIntegration
 		/* Private Functions                                                          */
 		/*============================================================================*/
 
-		private function handleContextView(view:DisplayObjectContainer):void
+		private function handleStarling(s:Starling):void
 		{
-			_logger.debug("Mapping provided DisplayObjectContainer as Starling contextView...");
-			_context.injector.map(DisplayObjectContainer).toValue(view);
+			_logger.debug("Mapping provided Starling instance and its stage  as Starling contextView...");
+			_context.injector.map(Starling).toValue(s);
+			_context.injector.map(DisplayObjectContainer).toValue(s.stage);
 		}
 		
 		private function handleView3D(view3D:View3D):void
