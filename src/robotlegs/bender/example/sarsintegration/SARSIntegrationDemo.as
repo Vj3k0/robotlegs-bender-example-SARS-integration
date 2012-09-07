@@ -82,18 +82,6 @@ package robotlegs.bender.example.sarsintegration
 			initAway3D();
 			initStarling();
 			
-//			_starling.addEventListener(starling.events.Event.ROOT_CREATED, setupContext);
-			
-			_context = new Context();
-			
-			_context.extend(SARSBundle).configure(_view, _starling, Config, this);
-			
-			stage.addEventListener( flash.events.Event.RESIZE, onResize, false, 0, true );
-			stage.addEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame, false, 0, true );
-		}
-		
-		private function setupContext(event:starling.events.Event):void
-		{
 			_context = new Context();
 			
 			_context.extend(SARSBundle).configure(_view, _starling, Config, this);

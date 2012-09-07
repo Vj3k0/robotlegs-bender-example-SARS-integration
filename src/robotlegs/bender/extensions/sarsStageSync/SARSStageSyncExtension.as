@@ -18,6 +18,10 @@ package robotlegs.bender.extensions.sarsStageSync
 	import robotlegs.bender.framework.api.IExtension;
 	import robotlegs.bender.framework.api.ILogger;
 	import robotlegs.bender.framework.impl.UID;
+	
+	import starling.core.Starling;
+	import starling.display.DisplayObjectContainer;
+	import starling.events.Event;
 
 	/**
 	 * <p>This Extension waits for a DisplayObjectContainer to be added as a configuration,
@@ -36,10 +40,16 @@ package robotlegs.bender.extensions.sarsStageSync
 
 		private var _context:IContext;
 
-		private var _contextView:DisplayObjectContainer;
+		private var _contextView:flash.display.DisplayObjectContainer;
+		
+		private var _starling:Starling;
 
 		private var _logger:ILogger;
-
+		
+		private var _contextReady:Boolean;
+		
+		private var _starlingReady:Boolean;
+		
 		/*============================================================================*/
 		/* Public Functions                                                           */
 		/*============================================================================*/
@@ -49,8 +59,11 @@ package robotlegs.bender.extensions.sarsStageSync
 			_context = context;
 			_logger = context.getLogger(this);
 			_context.addConfigHandler(
-				instanceOf(DisplayObjectContainer),
+				instanceOf(flash.display.DisplayObjectContainer),
 				handleContextView);
+			_context.addConfigHandler(
+				instanceOf(Starling),
+				handleStarlingContextView);
 		}
 
 		public function toString():String
@@ -62,7 +75,7 @@ package robotlegs.bender.extensions.sarsStageSync
 		/* Private Functions                                                          */
 		/*============================================================================*/
 
-		private function handleContextView(view:DisplayObjectContainer):void
+		private function handleContextView(view:flash.display.DisplayObjectContainer):void
 		{
 			// ignore Away3D view
 			if (view is View3D)
@@ -76,33 +89,78 @@ package robotlegs.bender.extensions.sarsStageSync
 			_contextView = view;
 			if (_contextView.stage)
 			{
+				_contextReady = true;
 				initializeContext();
 			}
 			else
 			{
 				_logger.debug("Context view is not yet on stage. Waiting...");
-				_contextView.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+				_contextView.addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			}
 		}
-
-		private function onAddedToStage(event:Event):void
+		
+		private function onAddedToStage(event:flash.events.Event):void
 		{
-			_contextView.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			_logger.debug("Context view added on stage.");
+			_contextView.removeEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
+			_contextView.addEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+			_contextReady = true;
+			
 			initializeContext();
 		}
 
-		private function initializeContext():void
-		{
-			_logger.debug("Context view is now on stage. Initializing context...");
-			_context.lifecycle.initialize();
-			_contextView.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-		}
-
-		private function onRemovedFromStage(event:Event):void
+		private function onRemovedFromStage(event:flash.events.Event):void
 		{
 			_logger.debug("Context view has left the stage. Destroying context...");
-			_contextView.removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+			_contextView.removeEventListener(flash.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			_context.lifecycle.destroy();
 		}
+		
+		//---------------------------------------------------------------
+		// Handling Starling
+		//---------------------------------------------------------------
+		
+		private function handleStarlingContextView(currentStarling:Starling):void
+		{
+			if (_starling)
+			{
+				_logger.warn('A Starling contextView has already been set, ignoring {0}', [currentStarling]);
+				return;
+			}
+			_starling = currentStarling;
+			if (currentStarling.stage.numChildren > 0)
+			{
+				_starlingReady = true;
+				initializeContext();
+			}
+			else
+			{
+				_logger.debug("Starling context view is not yet on stage. Waiting...");
+				currentStarling.addEventListener(starling.events.Event.CONTEXT3D_CREATE, onContextCreated);
+			}
+		}
+		
+		private function onContextCreated(event:starling.events.Event):void
+		{
+			_logger.debug("Starling context view added on stage.");
+			_starlingReady = true;
+			
+			initializeContext();
+		}
+
+		//---------------------------------------------------------------
+		// Initialization
+		//---------------------------------------------------------------
+		
+		private function initializeContext():void
+		{
+			// if both of the views are not on stage, postpone initialization
+			if (!_contextReady || !_starlingReady)
+				return;
+			
+			_logger.debug("Default and Starling context views are now on stage. Initializing context...");
+			_context.lifecycle.initialize();
+		}
+
 	}
 }
