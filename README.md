@@ -1,5 +1,7 @@
 # Example for SARS integration
 
+*Note: This example is depreceated, should be updated to work with StarlingCollection.*
+
 SARS is short for:
 
 - **S** tarling
@@ -7,8 +9,11 @@ SARS is short for:
 - **R** obotlegs 2
 - **S** ignalCommandMap extension
 
+SARS library can be found [here](https://github.com/Vj3k0/robotlegs-extensions-SARS).
+
 ## TODO
 
+**Update tutorial for use with new version of SARS!**
 
 ## Overview
 
