@@ -1,7 +1,5 @@
 # Example for SARS integration
 
-*Note: This example is depreceated, should be updated to work with StarlingCollection.*
-
 SARS is short for:
 
 - **S** tarling
@@ -13,7 +11,8 @@ SARS library can be found [here](https://github.com/Vj3k0/robotlegs-extensions-S
 
 ## TODO
 
-**Update tutorial for use with new version of SARS!**
+- Write usage instructions
+- Write tutorial explanation
 
 ## Overview
 
@@ -39,6 +38,7 @@ Common usage for this integration would be when you require to have application 
 ## Libraries
 Libraries required for this extension are:
 
+- [SARS extension](https://github.com/Vj3k0/robotlegs-extensions-SARS)
 - [Robotlegs v2.0.0b1](https://github.com/robotlegs/robotlegs-framework)
 - [Away3D v4.0.9_gold](https://github.com/away3d/away3d-core-fp11)
 - [Starling v1.2](https://github.com/PrimaryFeather/Starling-Framework)

@@ -18,6 +18,7 @@ package robotlegs.bender.example.sarsintegration
 	import robotlegs.bender.bundles.SARSBundle;
 	import robotlegs.bender.example.sarsintegration.config.Config;
 	import robotlegs.bender.example.sarsintegration.views.MainApplication;
+	import robotlegs.bender.extensions.sarsIntegration.api.StarlingCollection;
 	import robotlegs.bender.framework.api.IContext;
 	import robotlegs.bender.framework.impl.Context;
 	
@@ -41,7 +42,8 @@ package robotlegs.bender.example.sarsintegration
 		// Starling variables
 		//---------------------------------------------------------------
 		
-		private var _starling:Starling;
+		private var _starlingUI:Starling;
+		private var _starlingBackground:Starling;
 		
 		//---------------------------------------------------------------
 		// Common variables
@@ -83,7 +85,11 @@ package robotlegs.bender.example.sarsintegration
 			
 			_context = new Context();
 			
-			_context.extend(SARSBundle).configure(_view, _starling, Config, this);
+			var starlingCollection:StarlingCollection = new StarlingCollection();
+			starlingCollection.addItem(_starlingUI, "ui");
+			starlingCollection.addItem(_starlingBackground, "background");
+			
+			_context.extend(SARSBundle).configure(_view, starlingCollection, Config, this);
 			
 			stage.addEventListener( flash.events.Event.RESIZE, onResize, false, 0, true );
 			stage.addEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame, false, 0, true );
@@ -124,9 +130,10 @@ package robotlegs.bender.example.sarsintegration
 		
 		private function initStarling():void
 		{
-			_starling = new Starling(MainApplication, stage, _stage3DProxy.viewPort, _stage3DProxy.stage3D);
-			
-			_starling.start();
+			_starlingUI = new Starling(MainApplication, stage, _stage3DProxy.viewPort, _stage3DProxy.stage3D);
+			_starlingUI.start();
+			_starlingBackground = new Starling(MainApplication, stage, _stage3DProxy.viewPort, _stage3DProxy.stage3D);
+			_starlingBackground.start();
 		}
 		
 		private function onResize( event:flash.events.Event = null ):void
@@ -139,9 +146,11 @@ package robotlegs.bender.example.sarsintegration
 		{
 			_stage3DProxy.clear();
 			
+			_starlingBackground.nextFrame();
+			
 			_view.render();
 			
-			_starling.nextFrame();
+			_starlingUI.nextFrame();
 			
 			_stage3DProxy.present();
 		}
