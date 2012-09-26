@@ -2,10 +2,8 @@ package robotlegs.bender.example.sarsintegration.views.button
 {
 	import away3d.containers.ObjectContainer3D;
 	import away3d.entities.Mesh;
-	import away3d.entities.Sprite3D;
 	import away3d.events.MouseEvent3D;
 	import away3d.materials.ColorMaterial;
-	import away3d.materials.MaterialBase;
 	import away3d.primitives.PlaneGeometry;
 	
 	import org.osflash.signals.Signal;

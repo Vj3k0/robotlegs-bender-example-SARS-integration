@@ -4,15 +4,16 @@ package robotlegs.bender.example.sarsintegration.views.button
 	
 	import org.osflash.signals.Signal;
 	
+	import robotlegs.bender.extensions.sarsIntegration.api.IDisplayObject;
+	
 	import starling.display.Image;
 	import starling.display.Sprite;
-	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	
-	public class Button2D extends Sprite implements IButton
+	public class Button2D extends Sprite implements IButton, IDisplayObject
 	{
 		//---------------------------------------------------------------
 		// Variables
@@ -21,13 +22,20 @@ package robotlegs.bender.example.sarsintegration.views.button
 		private var _triggered:Signal;
 		private var _image:Image;
 		
+		//---------------------------------------------------------------
+		// Constructor
+		//---------------------------------------------------------------
+		
 		public function Button2D()
 		{
 			super();
 			
 			_triggered = new Signal();
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
+		
+		//---------------------------------------------------------------
+		// Public methods
+		//---------------------------------------------------------------
 		
 		public function get triggered():Signal
 		{
@@ -39,23 +47,7 @@ package robotlegs.bender.example.sarsintegration.views.button
 			_image.texture = Texture.fromBitmapData(drawRandomColoredRectangle(color));
 		}
 		
-		private function onAddedToStage(event:Event):void
-		{
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-			
-			init();
-		}
-		
-		private function onRemovedFromStage(event:Event):void
-		{
-			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			
-			kill();
-		}
-		
-		protected function init():void
+		public function init():void
 		{
 			_image = new Image(Texture.fromBitmapData(drawRandomColoredRectangle(Math.random() * 0xFFFFFF)));
 			_image.useHandCursor = true;
@@ -63,11 +55,15 @@ package robotlegs.bender.example.sarsintegration.views.button
 			addChild(_image);
 		}
 		
-		protected function kill():void
+		public function destroy():void
 		{
 			_image.removeEventListener(TouchEvent.TOUCH, handleTouch);
 			removeChild(_image, true);
 		}
+		
+		//---------------------------------------------------------------
+		// Private methods
+		//---------------------------------------------------------------
 		
 		private function drawRandomColoredRectangle(color:uint):BitmapData
 		{
