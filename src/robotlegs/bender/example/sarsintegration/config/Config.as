@@ -36,15 +36,23 @@ package robotlegs.bender.example.sarsintegration.config
 		[PostConstruct]
 		public function init():void
 		{
+//            Provide fallback if something goes wrong...
+            injector.fallbackProvider = new DefaultFallbackProvider();
+
 			context.logLevel = LogLevel.DEBUG;
-			
-//			Map commands
-			
+
+//            Hack since SignalCommandMap uses getInstance() instead od getOrCreateNewInstance()
+//            which throws Error (ignore debug output from Logger)
+            injector.map(ButtonActivated).asSingleton();
+            injector.map(PerformSetup).asSingleton();
+
+//			  Map commands
+
 			commandMap.map(ButtonActivated).toCommand(ChangeButtonColorCommand);
 			commandMap.map(PerformSetup, true).toCommand(SetupCommand);
-			
-//			Map mediators
-			
+
+//			  Map mediators
+
 			mediatorMap.map(IButton).toMediator(ButtonMediator);
 			mediatorMap.map(IMainApplication).toMediator(MainApplicationMediator);
 		}

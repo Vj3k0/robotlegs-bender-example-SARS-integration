@@ -18,7 +18,8 @@ package robotlegs.bender.example.sarsintegration
 	import robotlegs.bender.bundles.SARSBundle;
 	import robotlegs.bender.example.sarsintegration.config.Config;
 	import robotlegs.bender.example.sarsintegration.views.MainApplication;
-	import robotlegs.bender.extensions.sarsIntegration.api.StarlingCollection;
+import robotlegs.bender.extensions.contextView.ContextView;
+import robotlegs.bender.extensions.sarsIntegration.api.StarlingCollection;
 	import robotlegs.bender.framework.api.IContext;
 	import robotlegs.bender.framework.impl.Context;
 	
@@ -89,7 +90,7 @@ package robotlegs.bender.example.sarsintegration
 			starlingCollection.addItem(_starlingUI, "ui");
 			starlingCollection.addItem(_starlingBackground, "background");
 			
-			_context.extend(SARSBundle).configure(_view, starlingCollection, Config, this);
+			_context.install(SARSBundle).configure(_view, starlingCollection, Config, new ContextView(this));
 			
 			stage.addEventListener( flash.events.Event.RESIZE, onResize, false, 0, true );
 			stage.addEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame, false, 0, true );
